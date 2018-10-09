@@ -7,10 +7,214 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Author. Syurel</copyright>
-    <lastBuildDate>Tue, 26 Sep 2017 00:38:02 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 06 Oct 2018 17:56:51 +0800</lastBuildDate>
     
         <atom:link href="https://syurel.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>斗兽战棋游戏分析（一）</title>
+      <link>https://syurel.github.io/post/%E6%96%97%E5%85%BD%E6%88%98%E6%A3%8B%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E4%B8%80/</link>
+      <pubDate>Sat, 06 Oct 2018 17:56:51 +0800</pubDate>
+      
+      <guid>https://syurel.github.io/post/%E6%96%97%E5%85%BD%E6%88%98%E6%A3%8B%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E4%B8%80/</guid>
+      
+        <description>
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;作者&lt;/strong&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;游戏版本&lt;/strong&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;角色等级&lt;/strong&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;游戏时间&lt;/strong&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;strong&gt;段位&lt;/strong&gt;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;Syure&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1.10.9&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;18&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;70天&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;10阶&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;一-游戏系统架构图&#34;&gt;一、游戏系统架构图&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-1-系统架构图&#34;&gt;1.1 系统架构图&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://pgbszm3ct.bkt.clouddn.com/%E6%B8%B8%E6%88%8F%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E5%9B%BE.png&#34; alt=&#34;游戏系统架构图&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;​                                                      注：标注星号的为重要系统&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-系统结构说明&#34;&gt;1.2 系统结构说明&lt;/h3&gt;
+
+&lt;h4 id=&#34;1-2-1-tactical-monsters-游戏类型&#34;&gt;1.2.1  Tactical Monsters 游戏类型&lt;/h4&gt;
+
+&lt;p&gt;​   策略、战棋回合制&lt;/p&gt;
+
+&lt;h4 id=&#34;1-2-2-游戏系统组成&#34;&gt;1.2.2  游戏系统组成&lt;/h4&gt;
+
+&lt;p&gt;​   PVP、PVE、EVE、养成系统、计费系统、社交系统、任务系统、辅助系统共 8 大系统组成。&lt;/p&gt;
+
+&lt;p&gt;​   主要系统为：&lt;/p&gt;
+
+&lt;p&gt;​   (1) PVP：竞技模式(单人)、电竞模式(单人)&lt;/p&gt;
+
+&lt;p&gt;​   (2) 养成：怪物养成&lt;/p&gt;
+
+&lt;p&gt;​   (3) PVE：怪物学院、冒险、进阶&lt;/p&gt;
+
+&lt;p&gt;​   其他系统：&lt;/p&gt;
+
+&lt;p&gt;​   (1) 计费系统：商店&lt;/p&gt;
+
+&lt;p&gt;​   (2) 社交系统：公会系统、聊天系统&lt;/p&gt;
+
+&lt;p&gt;​   (3) 辅助系统：出征、月签到、排行榜&lt;/p&gt;
+
+&lt;p&gt;​   (4)任务系统：任务&lt;/p&gt;
+
+&lt;p&gt;​   (5)EVE：矿山守卫战&lt;/p&gt;
+
+&lt;h4 id=&#34;1-2-3-从系统架构图可以看出&#34;&gt;1.2.3  从系统架构图可以看出&lt;/h4&gt;
+
+&lt;p&gt;​   1、目前PVP玩法只有1v1的SOLO玩法，不存在组队或者多对多玩法。这就意味着在PVP游戏体验过程中少了协作、队友交流等玩家交互行为，对局的胜负结果完全需要依靠玩家个人对游戏玩法、机制、卡牌的理解运用程度。同时，单人对抗也就意味着最终战斗结果由玩家自己在战前、战中的行为决定的比重会更高，玩家获得的对抗乐趣也会随之增加。为了获得对抗乐趣，玩家需要不断地探索、深挖游戏内涵，从而提高玩家的投入度，也利于游戏各系统良性发展。&lt;/p&gt;
+
+&lt;p&gt;​   2、游戏有着模式丰富且难度安排合理的PVE玩法，从入门到进阶，难度梯度分布井然有序。玩家 “冷启动” 游戏时可以通过冒险模式或者怪物学院快速了解基本的游戏机制，获取游戏资源(怪物卡片+金币等)，玩家可以利用PVE中的资源合理规划自己的成长路线。合理的PVE设置，可以满足用户的获得感，提高用户留存。&lt;/p&gt;
+
+&lt;p&gt;​   3、游戏中的卡牌养成系统，为玩家提供的强弱各异的怪物养成，玩家可以根据不同的怪物特点建立长期的怪物养成计划，可以带给玩家真切的成长感，延长游戏寿命。&lt;/p&gt;
+
+&lt;p&gt;​   4、游戏中其他系统的作用：&lt;/p&gt;
+
+&lt;p&gt;​   (1) &lt;strong&gt;增加了游戏玩法的多样性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   除主要系统外仍有5种系统支撑该游戏的玩法，其他每个不同系统都会给玩家带来不同的游戏乐趣及游戏体验。&lt;/p&gt;
+
+&lt;p&gt;​   (2) &lt;strong&gt;在玩家进行游戏体验的同时，降低玩家疲劳感和枯燥感&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   除主要玩法之外，玩家还可以通过观看公会中其他玩家分享的对局、出征或者EVE等延时玩法家底疲劳感和枯燥感。&lt;/p&gt;
+
+&lt;h2 id=&#34;二-游戏闭环图&#34;&gt;二、游戏闭环图&lt;/h2&gt;
+
+&lt;h3 id=&#34;2-1-闭环图&#34;&gt;2.1 闭环图&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://pgbszm3ct.bkt.clouddn.com/%E9%97%AD%E7%8E%AF%E5%9B%BE.png&#34; alt=&#34;闭环图&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-闭环图说明&#34;&gt;2.2 闭环图说明&lt;/h3&gt;
+
+&lt;h4 id=&#34;2-2-1-循环模式说明&#34;&gt;2.2.1  循环模式说明&lt;/h4&gt;
+
+&lt;p&gt;​   首先玩家接触游戏核心玩法，通过PVP、PVE、出征、捐赠、任务玩法获得货币和怪物卡片。然后玩家通过消耗货币和怪物卡片对怪物进行养成提升。在玩家提升实力后，可以攻略更高难度的关卡或者剧情章节，在PVP中击败更厉害的玩家，以此对实力的提升进行验证。同时，玩家会获得更多的资源，为进一步的成长打下基础，以此循环。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-2-2-限制循环的方式&#34;&gt;2.2.2  限制循环的方式&lt;/h4&gt;
+
+&lt;p&gt;​   1、&lt;strong&gt;限制奖励、参与次数&lt;/strong&gt; ：限制玩家在竞技模式中每日胜场奖励次数、电竞模式参与次数、出征队列最大出征队伍数、任务每日更换次数、进阶中各模式的参与次数。&lt;/p&gt;
+
+&lt;p&gt;​   2、&lt;strong&gt;限制奖励冷却时间&lt;/strong&gt;：设置玩家每次请求捐赠的时间间隔、队伍出征时长、新任务出现的时间间隔。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-2-3-加速循环的方式&#34;&gt;2.2.3  加速循环的方式&lt;/h4&gt;
+
+&lt;p&gt;​   1、&lt;strong&gt;充值&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   针对玩家群体：RMB玩家&lt;/p&gt;
+
+&lt;p&gt;​   玩家通过充值获得游戏货币可以在商城中购买玩家任何想要的核心资源等物品(例：双倍经验卡、双倍金币卡)，玩家只要花费比非拥有双倍经验卡玩家一半左右的时间就可获得同样的经验和金币。快速提升玩家成长。&lt;/p&gt;
+
+&lt;p&gt;​   2、&lt;strong&gt;投入更多时间、精力&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   针对玩家群体：RMB玩家、时间充裕玩家&lt;/p&gt;
+
+&lt;p&gt;​   对于充值少或不充值的玩家，可以通过花费更多的时间，参与更多的游戏内容，从而获得系统发放的免费资源，加快角色成长。&lt;/p&gt;
+
+&lt;p&gt;​   3、&lt;strong&gt;提升游戏技巧，增加玩家获胜概率&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   针对玩家类型：全体玩家&lt;/p&gt;
+
+&lt;p&gt;​   因玩家游戏胜利获得的奖励要高于游戏失败所获得的奖励，玩家通过自身的游戏技巧锻炼，获得游戏胜利，来获得更多的资源，加快角色成长。&lt;/p&gt;
+
+&lt;h2 id=&#34;三-经济系统浅析&#34;&gt;三、经济系统浅析&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-货币种类汇总表&#34;&gt;3.1 货币种类汇总表&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://pgbszm3ct.bkt.clouddn.com/%E8%B4%A7%E5%B8%81%E6%B1%87%E6%80%BB%E8%A1%A8.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-多货币设计目的&#34;&gt;3.2 多货币设计目的&lt;/h3&gt;
+
+&lt;p&gt;​   1、  稳定游戏经济体系&lt;/p&gt;
+
+&lt;p&gt;​   (1)只可由高级货币向低级货币兑换，对于宝石作为核心货币进行了保护。&lt;/p&gt;
+
+&lt;p&gt;​   (2)两种主要货币的获取途径略有差异。&lt;/p&gt;
+
+&lt;p&gt;​   2、  保证玩家丰富的游戏体验&lt;/p&gt;
+
+&lt;p&gt;​   根据每种货币的获取途径不同，玩家需要了解对每种货币的获取方式，并且玩家根据不同的货币获取方式不同，需要进行充值/完成任务/多进行对战的体验才可保证收益最大化。&lt;/p&gt;
+
+&lt;p&gt;​   3、  适度控制玩家成长&lt;/p&gt;
+
+&lt;p&gt;​   通过多种货币的设置，玩家根据自身情况收集不同种类的货币，每种货币的获取方式及消耗时间不同，目的为分散玩家的关注点。&lt;/p&gt;
+
+&lt;p&gt;​   4、  增加厂商收入&lt;/p&gt;
+
+&lt;p&gt;​   因货币只可由高级货币向低级货币兑换，而作为怪物升级唯一可用的普通货币——金币，其收入与产出从游戏中期开始便不成正比，如玩家想加快自身的成长，获得更好的游戏体验，则需进行充值、兑换，从而增加厂商收入。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-货币分析&#34;&gt;3.3 货币分析&lt;/h3&gt;
+
+&lt;h4 id=&#34;3-3-1-高级货币-宝石&#34;&gt;3.3.1  高级货币：宝石&lt;/h4&gt;
+
+&lt;p&gt;​   货币说明：&lt;/p&gt;
+
+&lt;p&gt;​   高级货币，可通过充值获得，可以购买游戏中的礼包、宝箱、金币等资源，可通过游戏玩法免费获得但是获得数量较消耗数量少。&lt;/p&gt;
+
+&lt;p&gt;​   设计目的：&lt;/p&gt;
+
+&lt;p&gt;​   1、&lt;strong&gt;帮助玩家快速成长&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   通过消耗宝石获取资源，从而达到玩家快速成长的目的。&lt;/p&gt;
+
+&lt;p&gt;​   2、&lt;strong&gt;对消费形成认知，培养玩付费&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   游戏中的宝石购买比例随着单次投入RMB数增加而增加，通过对比会使玩家获得一种有便宜占的心理，从而起到了培养玩家付费的作用。而且玩家可以通过开通宝石月卡每天领取宝石，每日大量宝石的获得可培养玩家持续付费习惯。&lt;/p&gt;
+
+&lt;p&gt;​   3、&lt;strong&gt;提高玩家活跃及在线&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   玩家通过游戏玩法，可以每天稳定获得一定量的高级货币，玩家可以通过积攒一定量宝石，获得周期性的爆发成长，可以提高玩家的上线率和活跃度。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-2-金币&#34;&gt;3.3.2  金币&lt;/h4&gt;
+
+&lt;p&gt;​   货币说明：&lt;/p&gt;
+
+&lt;p&gt;​   游戏基础货币，可通过宝石购买或者游戏玩法免费获得，中后期游戏玩法金币产出量不足以满足玩家成长需求，是卡牌升级的唯一货币。&lt;/p&gt;
+
+&lt;p&gt;​   设计目的：&lt;/p&gt;
+
+&lt;p&gt;​   1、&lt;strong&gt;提高玩家的活跃度&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   金币是怪物升级的唯一货币，玩家想要不断获得成长就需要源源不断的金币收入，而大部分玩家主要是通过游戏玩法来免费获得，目的是提高玩家的上线率和活跃度 。&lt;/p&gt;
+
+&lt;p&gt;​   2、&lt;strong&gt;保护付费玩家体验&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   金币可以通过宝石兑换，因此付费玩家可以在短时间内兑换怪物升级所需的金币，从而提升自己的实力水平。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-4-总结&#34;&gt;3.4 总结&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;不同消费水平玩家的游戏体验&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;​   1、&lt;strong&gt;非RMB玩家&lt;/strong&gt;：可以通过长时间在线，获得一定量的资源，并在等级上超越其他玩家。也可以偶尔登陆，以休闲娱乐为主。主要群体以学生为主。&lt;/p&gt;
+
+&lt;p&gt;​   2、&lt;strong&gt;小R玩家&lt;/strong&gt;：宝石月卡可以提供大量的宝石，玩家每天至少愿意登录一次，领取奖励。月卡提供的宝石基本可以体验比非R更多的成长体验，再加上长时间在线，可以获得一个很棒的游戏体验。主要群体以部分学生以及少量上班族为主，是游戏中主要的游戏群体。&lt;/p&gt;
+
+&lt;p&gt;​   3、&lt;strong&gt;中R玩家&lt;/strong&gt;：充值可以购买、兑换大量的游戏核心资源，从而快速成长，体验竞技模式中连胜的快感，虚荣心、成就感可以得到满足 。&lt;/p&gt;
+
+&lt;p&gt;​   4、&lt;strong&gt;大R玩家&lt;/strong&gt;：追求各个排行榜的前列，希望有非常好的游戏体验，充值可以在游戏的世界中获得极大的成就感，可以满足现实中无法满足的欲望。&lt;/p&gt;
+</description>
+      
+    </item>
     
     <item>
       <title>智能衣柜 APP 原型设计</title>
